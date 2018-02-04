@@ -27,15 +27,20 @@ var server = http.createServer(function (request, response) {
   }
 });
 
+var leds = tessel.led;
+
+for (i = 0; i < leds.length; i++) {
+    leds[i].off;
+}
+
 server.listen(8080);
+console.log("All LEDS set to off!");
 
 console.log('Server running at http://192.168.1.101:8080/ for Access Point or http://192.168.0.42:8080 for WIFI');
 
 function toggleLED (url, request, response) {
   var indexRegex = /(\d)$/;
-
   var result = indexRegex.exec(url);
-
   var index = result[1];
 
   var led = tessel.led[index];
