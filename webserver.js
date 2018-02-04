@@ -1,7 +1,5 @@
 var tessel = require('tessel');
 var http = require('http');
-// var cors = require('cors')
-// Require two other core Node.js modules
 var fs = require('fs');
 var url = require('url');
 
@@ -25,26 +23,13 @@ var server = http.createServer(function (request, response) {
   if (urlParts.pathname.match(ledRegex)) {
     toggleLED(urlParts.pathname, request, response);
   } else {
-    showIndex(urlParts.pathname, request, response);
+    console.log("Something is amiss.")
   }
 });
 
 server.listen(8080);
 
 console.log('Server running at http://192.168.1.101:8080/ for Access Point or http://192.168.0.42:8080 for WIFI');
-
-
-function showIndex (url, request, response) {
-  response.writeHead(200, {"Content-Type": "text/html"});
-
-  fs.readFile(__dirname + '/index.html', function (err, content) {
-    if (err) {
-      throw err;
-    }
-
-    response.end(content);
-  });
-}
 
 function toggleLED (url, request, response) {
   var indexRegex = /(\d)$/;
