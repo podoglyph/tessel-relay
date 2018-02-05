@@ -12,5 +12,8 @@
   ],
   "license": "MIT",
   "readme": "A bare bones Tessel 2 blinky script.",
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.16.2",
+    "tessel-av": "^0.19.0"
+  }
 }
