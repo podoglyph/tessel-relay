@@ -34,6 +34,30 @@ var server = http.createServer(function (request, response) {
 
 });
 
+server.listen(8080);
+server.on('listening', function() {
+  downLeds();
+})
+
+console.log("All LEDS set to off!");
+console.log('Server running at http://192.168.1.101:8080/ for Access Point or http://192.168.0.42:8080 for WIFI');
+
+function toggleLED (index, request, response) {
+
+  var led = tessel.led[index];
+
+  led.toggle(function (err) {
+    if (err) {
+      console.log(err);
+      response.writeHead(500, {"Content-Type": "application/json"});
+      response.end(JSON.stringify({error: err}));
+    } else {
+      response.writeHead(200, {"Content-Type": "application/json"});
+      response.end(JSON.stringify({on: led.isOn}));
+    }
+  });
+}
+
 function downLeds(request, response) {
   var leds = tessel.led;
 
@@ -56,29 +80,4 @@ function upLeds(request, response) {
 
   response.writeHead(200, {"Content-Type": "application/json"});
   response.end(JSON.stringify({foo: "none"}));
-}
-
-server.listen(8080);
-server.on('listening', function() {
-  downLeds();
-})
-
-console.log("All LEDS set to off!");
-
-console.log('Server running at http://192.168.1.101:8080/ for Access Point or http://192.168.0.42:8080 for WIFI');
-
-function toggleLED (index, request, response) {
-
-  var led = tessel.led[index];
-
-  led.toggle(function (err) {
-    if (err) {
-      console.log(err);
-      response.writeHead(500, {"Content-Type": "application/json"});
-      response.end(JSON.stringify({error: err}));
-    } else {
-      response.writeHead(200, {"Content-Type": "application/json"});
-      response.end(JSON.stringify({on: led.isOn}));
-    }
-  });
 }
