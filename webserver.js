@@ -17,31 +17,57 @@ var server = http.createServer(function (request, response) {
 	}
 
   var urlParts = url.parse(request.url, true);
-
   var ledRegex = /leds/;
+  var indexRegex = /(\d)$/;
+  var result = indexRegex.exec(urlParts.pathname);
+  var index = result[1];
 
-  if (urlParts.pathname.match(ledRegex)) {
-    toggleLED(urlParts.pathname, request, response);
+  if (urlParts.pathname.match(ledRegex) && index != 6 && index != 5)  {
+    toggleLED(index, request, response);
+  } else if (index == 6) {
+      downLeds(request, response);
+  } else if (index == 5) {
+      upLeds(request, response);
   } else {
-    console.log("Something is amiss.")
+      console.log("Something is amiss.")
   }
+
 });
 
-var leds = tessel.led;
+function downLeds(request, response) {
+  var leds = tessel.led;
 
-for (i = 0; i < leds.length; i++) {
-    leds[i].off;
+  for (i = 0; i < leds.length; i++) {
+    leds[i].off();
+  }
+
+  if (response) {
+    response.writeHead(200, {"Content-Type": "application/json"});
+    response.end(JSON.stringify({bar: "foo"}));
+  }
+}
+
+function upLeds(request, response) {
+  var leds = tessel.led;
+
+  for (i = 0; i < leds.length; i++) {
+    leds[i].on();
+  }
+
+  response.writeHead(200, {"Content-Type": "application/json"});
+  response.end(JSON.stringify({foo: "none"}));
 }
 
 server.listen(8080);
+server.on('listening', function() {
+  downLeds();
+})
+
 console.log("All LEDS set to off!");
 
 console.log('Server running at http://192.168.1.101:8080/ for Access Point or http://192.168.0.42:8080 for WIFI');
 
-function toggleLED (url, request, response) {
-  var indexRegex = /(\d)$/;
-  var result = indexRegex.exec(url);
-  var index = result[1];
+function toggleLED (index, request, response) {
 
   var led = tessel.led[index];
 
