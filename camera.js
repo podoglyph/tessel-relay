@@ -17,70 +17,66 @@ server.listen(port, function () {
 });
 
 app.use(express.static(path.join(__dirname, '/public')));
-app.use(cors({origin: '*'}));
+app.use(cors({origin: 'http://localhost:8080'}));
 
-app.get('/', function (request, response) {
-  response.send('hello world')
+app.get('/', function (req, res) {
+  res.send('hello world')
 })
 
-app.get('/stream', (request, response) => {
-  response.redirect(camera.url);
+app.get('/stream', (req, res) => {
+  res.redirect(camera.url);
 });
 
-app.get('/leds/:ledId', (request, response) => {
-  const indexRegex = /(\d)$/;
-  const path = request.path;
-  const result = indexRegex.exec(path);
-  const index = result[1];
+app.get('/leds/:ledId', (req, res) => {
+
+  const index = req.params.ledId;
 
   if (index <= 3) {
-    toggleLED(index, request, response);
+    toggleLED(index, req, res);
   } else if (index == 5) {
-      upLeds(request, response);
-  } else if (index ==6) {
-      downLeds(request, response);
+      upLeds(req, res);
+  } else if (index == 6) {
+      downLeds(req, res);
   } else {
       console.log("Something is amiss.")
   }
 })
 
-function toggleLED (index, request, response) {
-  console.log(index);
-
-  var led = tessel.led[index];
+function toggleLED (index, req, res) {
+  const led = tessel.led[index];
 
   led.toggle(function (err) {
     if (err) {
       console.log(err);
-      response.writeHead(500, {"Content-Type": "application/json"});
-      response.end(JSON.stringify({error: err}));
+      res.writeHead(500, {"Content-Type": "application/json"});
+      res.end(JSON.stringify({error: err}));
     } else {
-      response.writeHead(200, {"Content-Type": "application/json"});
-      response.end(JSON.stringify({on: led.isOn}));
+      res.writeHead(200, {"Content-Type": "application/json"});
+      res.end(JSON.stringify({on: led.isOn}));
     }
   });
 }
 
-function downLeds(request, response) {
+function downLeds(req, res) {
   const leds = tessel.led;
 
   for (let i = 0; i < leds.length; i++) {
     leds[i].off();
   }
 
-  if (response) {
-    response.writeHead(200, {"Content-Type": "application/json"});
-    response.end(JSON.stringify({bar: "foo"}));
+  if (res) {
+    res.writeHead(200, {"Content-Type": "application/json"});
+    res.end(JSON.stringify({bar: "foo"}));
   }
 }
 
-function upLeds(request, response) {
+function upLeds(req, res) {
   const leds = tessel.led;
 
   for (let i = 0; i < leds.length; i++) {
     leds[i].on();
   }
 
-  response.writeHead(200, {"Content-Type": "application/json"});
-  response.end(JSON.stringify({foo: "none"}));
+  res.writeHead(200, {"Content-Type": "application/json"});
+  res.end(JSON.stringify({foo: "none"}));
 }
