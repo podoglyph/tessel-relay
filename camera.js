@@ -1,28 +1,26 @@
 'use strict';
+const tessel = require('tessel');
+const av = require('tessel-av');
 const express = require('express');
 const app = express();
 const server = require('http').Server(app);
 const os = require('os');
 const path = require('path');
 const port = 8888;
-const tessel = require('tessel');
-const av = require('tessel-av');
+const cors =require('cors');
 const camera = new av.Camera();
 
-var allowCrossDomain = function(request, response, next) {
-    response.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-    next();
-}
-
 server.listen(port, function () {
+  downLeds();
   console.log(`http://${os.hostname()}.local:${port}`);
+  console.log("All LEDS set to off!");
 });
 
 app.use(express.static(path.join(__dirname, '/public')));
-app.use(allowCrossDomain);
+app.use(cors({origin: '*'}));
 
-app.get('/', function (req, res) {
-  res.send('hello world')
+app.get('/', function (request, response) {
+  response.send('hello world')
 })
 
 app.get('/stream', (request, response) => {
@@ -45,35 +43,6 @@ app.get('/leds/:ledId', (request, response) => {
       console.log("Something is amiss.")
   }
 })
-
-// var server = http.createServer(function (request, response) {
-//
-//   response.setHeader('Access-Control-Allow-Origin', 'http://localhost:8080');
-//
-//   var urlParts = url.parse(request.url, true);
-//   var ledRegex = /leds/;
-//   var indexRegex = /(\d)$/;
-//   var result = indexRegex.exec(urlParts.pathname);
-//   var index = result[1];
-//
-//   if (urlParts.pathname.match(ledRegex) && index != 6 && index != 5)  {
-//     toggleLED(index, request, response);
-//   } else if (index == 6) {
-//       downLeds(request, response);
-//   } else if (index == 5) {
-//       upLeds(request, response);
-//   } else {
-//       console.log("Something is amiss.")
-//   }
-// });
-//
-// server.listen(8080);
-// server.on('listening', function() {
-//   downLeds();
-// })
-
-console.log("All LEDS set to off!");
-console.log('Server running at http://192.168.1.101:8080/ for Access Point or http://192.168.0.42:8080 for WIFI');
 
 function toggleLED (index, request, response) {
   console.log(index);
