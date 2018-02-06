@@ -66,7 +66,7 @@ function downLeds(req, res) {
 
   if (res) {
     res.writeHead(200, {"Content-Type": "application/json"});
-    res.end(JSON.stringify({bar: "Set high!"}));
+    res.end(JSON.stringify({status: "Set high!"}));
   }
 }
 
@@ -78,5 +78,5 @@ function upLeds(req, res) {
   }
 
   res.writeHead(200, {"Content-Type": "application/json"});
-  res.end(JSON.stringify({foo: "Set low!"}));
+  res.end(JSON.stringify({status: "Set low!"}));
 }
