@@ -5,12 +5,12 @@ const os = require('os');
 const path = require('path');
 const port = 8888;
 const cors =require('cors');
-const leds = require('./api/leds')
+const leds = require('./api/leds');
+const camera = require('./api/camera');
 
-
-app.use(express.static(path.join(__dirname, '/client')));
 app.use(cors({origin: 'http://localhost:8080'}));
 app.use('/leds', leds);
+app.use('/camera', camera);
 
 app.listen(port, function () {
   console.log(`http://${os.hostname()}.local:${port}`);
