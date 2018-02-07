@@ -1,7 +1,6 @@
-const express = require('express')
+const express = require('express');
 const router = express.Router();
 const path = require('path');
-const tessel = require('tessel');
 const av = require('tessel-av');
 const camera = new av.Camera();
 
