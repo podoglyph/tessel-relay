@@ -4,7 +4,7 @@ const router = express.Router();
 const os = require('os');
 const path = require('path');
 const port = 8888;
-const cors =require('cors');
+const cors = require('cors');
 const leds = require('./api/leds');
 const camera = require('./api/camera');
 

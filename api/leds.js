@@ -1,39 +1,28 @@
 const express = require('express')
 const router = express.Router()
 const tessel = require('tessel');
+const LedsController = require('../lib/controllers/ledsController');
 
 router.get('/', function(req, res) {
   res.send('A homey page.');
 });
 
-router.get('/:ledId', function (req, res) {
-  const index = req.params.ledId;
+router.get('/:ledId', LedsController.toggleLed);
 
-  if (index <= 3) {
-    toggleLED(index, req, res);
-  } else if (index == 5) {
-      upLeds(req, res);
-  } else if (index == 6) {
-      downLeds(req, res);
-  } else {
-      console.log("Something is amiss.")
-  }
-})
 
-function toggleLED (index, req, res) {
-  const led = tessel.led[index];
-
-  led.toggle(function (err) {
-    if (err) {
-      console.log(err);
-      res.writeHead(500, {"Content-Type": "application/json"});
-      res.end(JSON.stringify({error: err}));
-    } else {
-      res.writeHead(200, {"Content-Type": "application/json"});
-      res.end(JSON.stringify({on: led.isOn}));
-    }
-  });
-};
+// router.get('/:ledId', function (req, res) {
+//   const index = req.params.ledId;
+//
+//   if (index <= 3) {
+//     toggleLED(index, req, res);
+//   } else if (index == 5) {
+//       upLeds(req, res);
+//   } else if (index == 6) {
+//       downLeds(req, res);
+//   } else {
+//       console.log("Something is amiss.")
+//   }
+// })
 
 function downLeds(req, res) {
   const leds = tessel.led;
