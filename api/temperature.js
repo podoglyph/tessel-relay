@@ -1,28 +1,36 @@
 const express = require('express');
 const router = express.Router();
 const path = require('path');
-const sensorPin = require('tessel').port.A.pin.[0];
+const tessel = require('tessel');
+const pin = tessel.port.B.pin[7];
 
 router.get('/', function(req, res) {
-  // getTemp(req, res);
-  console.log(req, res);
+  getTemp(req, res)
 });
 
 function getTemp(req, res) {
+  pin.analogRead((error, reading) => {
+    if (error) {
+      throw error;
+    }
 
-  let voltage = reading * 3.3;
-  let voltage /= 1024.0;
+    let voltage = reading * 3.3;
 
-  console.log("Volts:", voltage);
+    let temperatureC = (voltage - 0.5) * 100;
 
-  let temperatureC = (voltage - 0.5) * 100;
-  console.log("Degrees C:", temperatureC);
+    let temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
+    console.log("Reading:", reading);
+    console.log("Volts:", voltage);
+    console.log("Degrees C:", temperatureC);
+    console.log("Degrees F", temperatureF);
 
-  let temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
+    res.writeHead(200, {"Content-Type": "application/json"});
+    res.end(JSON.stringify({
+      degreesF: temperatureF,
+      degreesC: temperatureC
+    }));
 
-  console.log("Degrees F", temperatureF);
-
-  // set a delay of 1000ms
+  });
 }
 
 module.exports = router
