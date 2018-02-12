@@ -19,11 +19,7 @@ function getTemp(req, res) {
     let temperatureC = (voltage - 0.5) * 100;
 
     let temperatureF = (temperatureC * 9.0 / 5.0) + 32.0;
-    console.log("Reading:", reading);
-    console.log("Volts:", voltage);
-    console.log("Degrees C:", temperatureC);
-    console.log("Degrees F", temperatureF);
-
+    
     res.writeHead(200, {"Content-Type": "application/json"});
     res.end(JSON.stringify({
       degreesF: temperatureF,
