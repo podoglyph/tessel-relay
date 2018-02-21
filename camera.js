@@ -9,7 +9,7 @@ const leds = require('./api/leds');
 const camera = require('./api/camera');
 const temperature = require('./api/temperature');
 
-app.use(cors({origin: 'http://localhost:3000'}));
+app.use(cors({origin: '*'}));
 app.use('/leds', leds);
 app.use('/camera', camera);
 app.use('/temperature', temperature);

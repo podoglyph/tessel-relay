@@ -11,7 +11,7 @@
     "Tessel"
   ],
   "license": "MIT",
-  "readme": "A bare bones Tessel 2 blinky script.",
+  "readme": "A bare bones Tessel 2 blinky camera temperature script.",
   "dependencies": {
     "cors": "^2.8.4",
     "express": "^4.16.2",
