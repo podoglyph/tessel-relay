@@ -7,6 +7,7 @@ const camera = new av.Camera();
 router.use(express.static(path.join(__dirname, './client')));
 
 router.get('/', function(req, res) {
+  res.set('Content-Type: image/png');
   res.redirect(camera.url);
 });
 
